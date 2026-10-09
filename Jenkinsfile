@@ -66,11 +66,16 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                    sed "s|ECR_IMAGE|${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}|g" \
-                    k8s/deployment.yaml > k8s/deployment-final.yaml
+                    echo "Authenticating with EKS Cluster"
+                    aws eks update-kubeconfig --region ${AWS_REGION} --name ${EKS_CLUSTER_NAME}
 
-                    kubectl apply -f k8s/deployment-final.yaml
-                    kubectl apply -f k8s/service.yaml
+                    echo "Generating final deployment manifest in root..."
+                    sed "s|ECR_IMAGE|${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}|g" \
+                    deployment.yml > deployment-final.yml
+
+                    echo "3. Applying manifests to the cluster..."
+                    kubectl apply -f deployment-final.yml
+                    kubectl apply -f service.yml
                 '''
             }
         }
