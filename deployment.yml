@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-devops-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jenkins-devops-app
+  template:
+    metadata:
+      labels:
+        app: jenkins-devops-app
+    spec:
+      containers:
+        - name: app
+          image: ECR_IMAGE
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
