@@ -67,7 +67,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Authenticating with EKS Cluster"
-                    aws eks update-kubeconfig --region ${AWS_REGION} --name ${EKS_CLUSTER_NAME}
+                    aws eks update-kubeconfig --region ${AWS_REGION} --name demo-cluster
 
                     echo "Generating final deployment manifest in root..."
                     sed "s|ECR_IMAGE|${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}|g" \
