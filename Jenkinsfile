@@ -3,9 +3,10 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'ap-south-1'
+        AWS_REGION = 'ap-southeast-2'
         ECR_REPOSITORY = 'jenkins-devops-app'
         IMAGE_TAG = "${BUILD_NUMBER}"
+        AWS_ACCOUNT_ID = '920739923430'
     }
 
     stages {
